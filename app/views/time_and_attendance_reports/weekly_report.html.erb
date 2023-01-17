@@ -1,0 +1,25 @@
+<h1>Weekly Report <%= @weekly_attendance[:current_work_week] %> </h1><%= link_to "Export report as spreadsheet", report_week_path(format: "xlsx") %>
+<table class="table striped">
+  <thead>
+    <th>Date</th>
+    <th>Name</th>
+    <th>Log In Time</th>
+    <th>Log Out Time</th>
+    <th>Total Employee Hours</th>
+    <th>Device</th>
+    <th>DeviceName</th>
+  </thead>
+  <tbody>
+    <% @weekly_attendance[:punchlog].each do |log| %>
+      <tr>
+          <td><%= log[:Date] %></td>
+          <td><%= log[:Name] %></td>
+          <td><%= log[:LogInTime] %></td>
+          <td><%= log[:LogOutTime] %></td>
+          <td><%= log[:TimeInOffice] %></td>
+          <td><%= log[:Device] %></td>
+          <td><%= log[:DeviceName] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

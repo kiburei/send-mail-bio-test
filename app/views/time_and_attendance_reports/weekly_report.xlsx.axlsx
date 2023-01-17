@@ -1,0 +1,11 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Weekly Report") do |sheet|
+  # this is the head row of your spreadsheet
+  sheet.add_row %w(Date Name LogIn LogOut Hours Device DeviceName)
+
+  # each user is a row on your spreadsheet
+  @weekly_attendance.each do |log|
+    sheet.add_row [log[:Date], log[:Name], log[:LogInTime], log[:LogOutTime], log[:TimeInOffice], log[:Device], log[:DeviceName]]
+  end
+end
