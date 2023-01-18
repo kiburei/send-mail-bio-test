@@ -17,18 +17,22 @@ class TimeAndAttendanceReportsController < ApplicationController
   def users
     current_month = Date.today.month
     current_day = Date.today - 1.month
-    current_work_week = current_day.beginning_of_week..(current_day.end_of_week - 2.days)
+    @current_work_week = current_day.beginning_of_week..(current_day.end_of_week - 2.days)
     staff_list = Uguser.where.not(staff_name: nil)
     @punchlog = []
     staff_list.each do |staff|
       @punchlog.push(
-        Punchlog.where(bsevtdt: current_work_week, user_id: staff.user_id).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
+        Punchlog.where(bsevtdt: @current_work_week, user_id: staff.user_id).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
       )
     end
     respond_to do |format|
       format.html
       format.xlsx
     end
+  end
+
+  def send_weekly_report
+    WeeklyReportMailer.weekly_report_email.deliver_later
   end
 
   def punchlog
@@ -42,45 +46,6 @@ class TimeAndAttendanceReportsController < ApplicationController
     if staff.save!
       render json: staff
     end
-  end
-
-  def weekly_report
-    current_month = Date.today.month
-    current_day = Date.today - 1.month
-    current_work_week = current_day.beginning_of_week..(current_day.end_of_week - 2.days)
-    weekly_punchlog = Punchlog.where(bsevtdt: current_work_week).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
-    @weekly_attendance = {
-      current_work_week: current_work_week,
-      TotalHoursPerEmployee: 0,
-      punchlog: []
-    }
-
-    weekly_punchlog.each do |punchlog|
-      staff_name = Uguser.find_by_user_id(punchlog[:user_id]).staff_name
-      if punchlog[:devid].to_s == @@devices[:login][:id].to_s
-        login = punchlog[:bsevtdt]
-      elsif punchlog[:devid].to_s == @@devices[:logout][:id].to_s
-        logout = punchlog[:bsevtdt]
-      else
-        office = "Alamaya"
-      end
-
-      @weekly_attendance[:punchlog].push(
-        Date: current_day,
-        Name: staff_name,
-        LogInTime: login,
-        LogOutTime: logout,
-        TimeInOffice: 0,
-        Device: punchlog[:devid],
-        DeviceName: punchlog[:devnm]
-      )
-    end
-
-    respond_to do |format|
-      format.html
-      format.xlsx
-    end
-
   end
 
   private
