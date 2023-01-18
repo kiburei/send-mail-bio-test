@@ -17,7 +17,7 @@ wb = xlsx_package.workbook
 
 wb.add_worksheet(name: "Weekly Report") do |sheet|
 
-  sheet.add_row %w(Date Name LogInTime LogoOutTime TimeInOffice TimeInOffice Device DeviceName)
+  sheet.add_row %w(Date Name LogInTime LogoOutTime OfficeTime(Mins) OfficeTime(Hrs) Device DeviceName)
 
   total_employee_hours = 0
   @punchlog.each do |staff_logs|
@@ -28,10 +28,10 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
         log.bsevtdt.strftime("%A"),
         Uguser.find_by_user_id(log.user_id).staff_name,
         if log.devid.to_s ==  devices[:login][:id].to_s
-          log.bsevtdt.to_time
+          log.bsevtdt.to_s
         end,
         if log.devid.to_s ==  devices[:logout][:id].to_s
-          log.bsevtdt
+          log.bsevtdt.to_s
         end,
         if log.devid.to_s ==  devices[:logout][:id].to_s
           (log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60
