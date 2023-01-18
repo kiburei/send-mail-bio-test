@@ -15,8 +15,17 @@ class TimeAndAttendanceReportsController < ApplicationController
   }
 
   def users
-    staff_list = Uguser.all
-    render json: staff_list
+    current_month = Date.today.month
+    current_day = Date.today - 1.month
+    current_work_week = current_day.beginning_of_week..(current_day.end_of_week - 2.days)
+    staff_list = Uguser.where.not(staff_name: nil)
+    @punchlog = []
+    staff_list.each do |staff|
+      @punchlog.push(
+        Punchlog.where(bsevtdt: current_work_week, user_id: staff.user_id).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
+      )
+    end
+
   end
 
   def punchlog

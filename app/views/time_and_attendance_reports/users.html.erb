@@ -1,0 +1,90 @@
+<%
+devices = {
+  login: {
+    id: 546838262,
+    name: 'BioStation 2 546838262 (172.18.1.41)'
+  },
+  logout: {
+    id: 541614750,
+    name: 'Main Entrance slave P2 541614750'
+  },
+  other: {
+    id: 545391539,
+    name: 'SUITE 3 545391539 (172.18.1.85)'
+  }
+}
+ %>
+<h1>Weekly Report </h1><%= link_to "Export report as spreadsheet", report_week_path(format: "xlsx") %>
+<table class="table striped">
+  <thead>
+    <th>Date</th>
+    <th>Name</th>
+    <th>Log In Time</th>
+    <th>Log Out Time</th>
+    <th>Time iin Office (Minutes)</th>
+    <th>Time iin Office (Hours)</th>
+    <th>Total Employee Hours</th>
+    <th>Device</th>
+    <th>DeviceName</th>
+  </thead>
+  <tbody>
+    <%= total_employee_hours = 0 %>
+    <% @punchlog.each do |staff_logs| %>
+      <% n = 0 %>
+      <% total_hours = 0 %>
+      <% staff_logs.each do |log| %>
+        <tr>
+          <td><%= log.bsevtdt.strftime("%A") %></td>
+          <td><%= Uguser.find_by_user_id(log.user_id).staff_name %></td>
+          <td>
+            <% if log.devid.to_s ==  devices[:login][:id].to_s %>
+              <%= log.bsevtdt %>
+            <% end %>
+          </td>
+          <td>
+            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+              <%= log.bsevtdt %>
+            <% end %>
+          </td>
+          <td>
+            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+              <%= (log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60 %>
+            <% end %>
+          </td>
+          <td>
+            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+              <%= ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
+              <% total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60%>
+            <% end %>
+          </td>
+          <td><%= log.devid %></td>
+          <td><%= log.devnm %></td>
+        </tr>
+        <% n += 1 %>
+      <% end %>
+        <% if staff_logs.any? %>
+          <tr>
+            <td>Total Hours for</td>
+            <td><%= Uguser.find_by_user_id(staff_logs.first.user_id).staff_name %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <%= total_hours %>
+              <%= total_employee_hours += total_hours %>
+            </td>
+          </tr>
+        <% end %>
+    <% end %>
+    <tr>
+      <td>Total Hours All Employees </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+        <%= total_employee_hours %>
+      </td>
+    </tr>
+  </tbody>
+</table>
