@@ -1,0 +1,68 @@
+devices = {
+  login: {
+    id: 546838262,
+    name: 'BioStation 2 546838262 (172.18.1.41)'
+  },
+  logout: {
+    id: 541614750,
+    name: 'Main Entrance slave P2 541614750'
+  },
+  other: {
+    id: 545391539,
+    name: 'SUITE 3 545391539 (172.18.1.85)'
+  }
+}
+
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Weekly Report") do |sheet|
+
+  sheet.add_row %w(Date Name LogInTime LogoOutTime TimeInOffice TimeInOffice Device DeviceName)
+
+  total_employee_hours = 0
+  @punchlog.each do |staff_logs|
+    n = 0
+    total_hours = 0
+    staff_logs.each do |log|
+      sheet.add_row [
+        log.bsevtdt.strftime("%A"),
+        Uguser.find_by_user_id(log.user_id).staff_name,
+        if log.devid.to_s ==  devices[:login][:id].to_s
+          log.bsevtdt.to_time
+        end,
+        if log.devid.to_s ==  devices[:logout][:id].to_s
+          log.bsevtdt
+        end,
+        if log.devid.to_s ==  devices[:logout][:id].to_s
+          (log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60
+        end,
+        if log.devid.to_s ==  devices[:logout][:id].to_s
+          ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
+          total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
+        end,
+        log.devid,
+        log.devnm
+      ]
+      n += 1
+    end
+    if staff_logs.any?
+      sheet.add_row [
+      "Total Hours for #{ Uguser.find_by_user_id(staff_logs.first.user_id).staff_name }",
+      " ",
+      " ",
+      " ",
+      " ",
+      total_hours,
+      total_employee_hours += total_hours
+      ]
+    end
+  end
+  sheet.add_row [
+    "Total Hours All Employees",
+    " ",
+    " ",
+    " ",
+    " ",
+    total_employee_hours
+  ]
+end

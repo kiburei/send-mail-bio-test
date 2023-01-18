@@ -25,7 +25,10 @@ class TimeAndAttendanceReportsController < ApplicationController
         Punchlog.where(bsevtdt: current_work_week, user_id: staff.user_id).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
       )
     end
-
+    respond_to do |format|
+      format.html
+      format.xlsx
+    end
   end
 
   def punchlog
