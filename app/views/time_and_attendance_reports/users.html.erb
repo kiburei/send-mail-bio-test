@@ -59,6 +59,9 @@ devices = {
           <td><%= log.devid %></td>
           <td><%= log.devnm %></td>
         </tr>
+        <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+          <%= total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
+        <% end %>
         <% n += 1 %>
       <% end %>
         <% if staff_logs.any? %>

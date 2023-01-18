@@ -38,11 +38,13 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
         end,
         if log.devid.to_s ==  devices[:logout][:id].to_s
           ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
-          total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
         end,
         log.devid,
         log.devnm
       ]
+      if log.devid.to_s ==  devices[:logout][:id].to_s
+        total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
+      end
       n += 1
     end
     if staff_logs.any?
@@ -53,8 +55,8 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
       " ",
       " ",
       total_hours,
-      total_employee_hours += total_hours
       ]
+      total_employee_hours += total_hours
     end
   end
   sheet.add_row [
