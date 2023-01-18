@@ -54,6 +54,7 @@ gem 'axlsx_rails'
 
 gem 'materialize-sass'
 
+gem "letter_opener"
 
 
 group :development, :test do

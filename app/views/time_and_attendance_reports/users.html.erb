@@ -14,7 +14,7 @@ devices = {
   }
 }
  %>
-<h1>Weekly Report <%= @current_work_week %></h1><%= link_to "Email report as spreadsheet", send_email_path %>
+<h1>Weekly Report <%= @current_work_week %></h1><%= link_to "Email Report", send_email_path %> <a href="/weekly_report.xlsx">Download Report</a>
 <table class="table striped">
   <thead>
     <th>Date</th>
@@ -22,7 +22,6 @@ devices = {
     <th>Log In Time</th>
     <th>Log Out Time</th>
     <th>Time in Office (Minutes)</th>
-    <th>Time in Office (Hours)</th>
     <th>Device</th>
     <th>DeviceName</th>
   </thead>
@@ -47,13 +46,7 @@ devices = {
           </td>
           <td>
             <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <%= (log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60 %>
-            <% end %>
-          </td>
-          <td>
-            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <%= ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
-              <% total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
+              <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
             <% end %>
           </td>
           <td><%= log.devid %></td>
@@ -70,9 +63,8 @@ devices = {
             <td><%= Uguser.find_by_user_id(staff_logs.first.user_id).staff_name %></td>
             <td></td>
             <td></td>
-            <td></td>
             <td>
-              <%= total_hours %>
+              <%= total_hours.to_i %>:<%= ((total_hours * 60) % 60).to_i %>
               <% total_employee_hours += total_hours %>
             </td>
           </tr>
@@ -83,9 +75,8 @@ devices = {
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
       <td>
-        <%= total_employee_hours %>
+        <%= total_employee_hours.to_i %>:<%= ((total_employee_hours * 60) % 60).to_i %>
       </td>
     </tr>
   </tbody>
