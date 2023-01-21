@@ -1,9 +1,7 @@
 class WeeklyReportMailer < ApplicationMailer
-  default from: 'akiburei@gmail.com'
+  default from: 'gooddeeds17@gmail.com'
 
   def weekly_report_email
-    attachments['weekly_report.xlsx'] = {:mime_type => 'application/mymimetype',
-                                   :content => 'some_string' }
-    mail(:to => 'gooddeeds17@gmail.com', :subject => "New account information")
+    mail(:to => 'akiburei@gmail.com', :subject => "Weekly Report: #{Date.today.beginning_of_week..Date.today.end_of_week}")
   end
 end
