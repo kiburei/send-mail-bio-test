@@ -6,10 +6,10 @@
   </head>
   <body>
     <p>Hi</p>
-    <p>
-    Click <a href="http://172.18.1.37:3000/weekly_report.xlsx" target="blank">here</a> to download the weekly report.
-    </p>
-    <p>
+    <p>Please click the following link to download the weekly attendance report</p>
+    <ul>
+      <li><a href="http://172.18.1.37:3000/weekly_report.xlsx" target="blank">Report for: #{(Date.today - 1.week).beginning_of_week..(Date.today - 1.week).end_of_week}</a></li>
+    </ul>
       Regards
     </p>
 
