@@ -56,7 +56,16 @@ Rails.application.configure do
   :enable_starttls_auto => true
   }
 
-
+  # config.action_mailer.smtp_settings = {
+  #  :address              => "smtp.office365.com",
+  #  :port                 => 587,
+  #  :domain               => "outlook.office365.com",
+  #  :authentication       => :login,
+  #  :user_name            => "scanner@leonardo.co.ke",
+  #  :password             => "Has14134",
+  #  :enable_starttls_auto => true
+  # }
+  
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
