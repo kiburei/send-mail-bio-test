@@ -15,8 +15,9 @@ devices = {
 
 wb = xlsx_package.workbook
 
-wb.add_worksheet(name: "Weekly Report #{ (Date.today - 1.week).beginning_of_week..(Date.today - 1.week).end_of_week }") do |sheet|
+wb.add_worksheet(name: "Weekly Report") do |sheet|
 
+  sheet.add_row [#{ (Date.today - 1.week).beginning_of_week..(Date.today - 1.week).end_of_week) }]
   sheet.add_row %w(Date Name LogInTime LogoOutTime OfficeTime Device DeviceName)
 
   total_employee_hours = 0
