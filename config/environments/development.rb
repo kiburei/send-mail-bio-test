@@ -53,7 +53,7 @@ Rails.application.configure do
    :user_name            => "gooddeeds17@gmail.com",
    :password             => "jzjrooqchfykihtz",
    #:authentication       => "plain",
-  :enable_starttls_auto => true
+   :enable_starttls_auto => true
   }
 
   # config.action_mailer.smtp_settings = {
@@ -65,7 +65,7 @@ Rails.application.configure do
   #  :password             => "Has14134",
   #  :enable_starttls_auto => true
   # }
-  
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
