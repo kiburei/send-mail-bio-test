@@ -14,7 +14,7 @@
 # end
 #
 every 1.minute do
-  runner "Punchlog.send_mail"
+  runner "Punchlog.send_mail", :environment => "development"
 end
 
 # Learn more: http://github.com/javan/whenever
