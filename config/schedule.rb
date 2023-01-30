@@ -14,7 +14,7 @@
 # end
 #
 every 1.minute do
-  runner "WeeklyReportMailer.weekly_report_email.deliver_now"
+  runner "Punchlog.send_mail"
 end
 
 # Learn more: http://github.com/javan/whenever
