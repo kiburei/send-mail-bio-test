@@ -13,7 +13,7 @@
 #   rake "some:great:rake:task"
 # end
 #
-every 1.minute do
+every :friday, at: '12am' do
   runner "Punchlog.send_mail", :environment => "development"
 end
 
