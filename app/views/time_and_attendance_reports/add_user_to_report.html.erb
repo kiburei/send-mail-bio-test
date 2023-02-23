@@ -10,8 +10,8 @@ devices = {
   }
 }
  %>
-<h1>Weekly Report <%= @current_work_week %></h1><a href="/weekly_report.xlsx">Download Report</a>
-<a href="/report/new_staff">Add User to Report</a>
+<a href="/weekly_report">Back</a>
+<h1>Add Employee to Report</h1>
 <table class="table striped">
   <thead>
     <th>Date</th>
@@ -63,6 +63,13 @@ devices = {
             <td>
               <%= total_hours.to_i %>:<%= ((total_hours * 60) % 60).to_i %>
               <% total_employee_hours += total_hours %>
+            </td>
+            <td>
+              <%= form_with url: "/update/staff", method: :post do |form| %>
+                <%= form.hidden_field :user_id, value: staff_logs.first.user_id %>
+                <%= form.text_field :staff_name, placeholder: 'Enter Staff Name' %>
+                <%= form.submit "Add Employee" %>
+              <% end %>
             </td>
           </tr>
         <% end %>

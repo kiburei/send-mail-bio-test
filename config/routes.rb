@@ -6,5 +6,6 @@ Rails.application.routes.draw do
   get 'report/week' => 'time_and_attendance_reports#weekly_report'
   post 'update/staff' => 'time_and_attendance_reports#update_staff'
   get 'send/email' => 'time_and_attendance_reports#send_weekly_report'
+  get 'report/new_staff' => 'time_and_attendance_reports#add_user_to_report'
 
 end

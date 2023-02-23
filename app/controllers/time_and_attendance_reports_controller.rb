@@ -16,7 +16,7 @@ class TimeAndAttendanceReportsController < ApplicationController
 
   def users
     current_month = Date.today.month
-    current_day = Date.today - 1.week
+    current_day = Date.today - 70.days
     @current_work_week = current_day.beginning_of_week..(current_day.end_of_week)
     staff_list = Uguser.where.not(staff_name: nil)
     @punchlog = []
@@ -31,6 +31,32 @@ class TimeAndAttendanceReportsController < ApplicationController
     end
   end
 
+  def add_user_to_report
+    current_month = Date.today.month
+    current_day = Date.today - 70.days
+    @current_work_week = current_day.beginning_of_week..(current_day.end_of_week)
+    staff_list = Uguser.where(staff_name: nil)
+    @punchlog = []
+    staff_list.each do |staff|
+      @punchlog.push(
+        Punchlog.where(bsevtdt: @current_work_week, user_id: staff.user_id).select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
+      )
+    end
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def update_staff
+    staff = Uguser.find_by_user_id(params[:user_id])
+    staff.staff_name = params[:staff_name]
+    if staff.save!
+      respond_to do |format|
+        format.js {render inline: "location.reload();" }
+      end
+    end
+  end
+
   def send_weekly_report
     WeeklyReportMailer.weekly_report_email.deliver_now
   end
@@ -38,14 +64,6 @@ class TimeAndAttendanceReportsController < ApplicationController
   def punchlog
     punchlog = Punchlog.all.select(:devid, :devnm, :user_name, :user_id, :bsevtdt)
     render json: punchlog
-  end
-
-  def update_staff
-    staff = Uguser.find_by_user_id(params[:user_id])
-    staff.staff_name = params[:staff_name]
-    if staff.save!
-      render json: staff
-    end
   end
 
   private
