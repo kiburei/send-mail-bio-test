@@ -10,78 +10,86 @@ devices = {
   }
 }
  %>
-<a href="/weekly_report">Back</a>
-<h1>Add Employee to Report</h1>
-<table class="table striped">
-  <thead>
-    <th>Date</th>
-    <th>Name</th>
-    <th>Log In Time</th>
-    <th>Log Out Time</th>
-    <th>Time in Office (Minutes)</th>
-    <th>Device</th>
-    <th>DeviceName</th>
-  </thead>
-  <tbody>
-    <% total_employee_hours = 0 %>
-    <% @punchlog.each do |staff_logs| %>
-      <% n = 0 %>
-      <% total_hours = 0 %>
-      <% staff_logs.each do |log| %>
-        <tr>
-          <td><%= log.bsevtdt.strftime("%A") %></td>
-          <td><%= Uguser.find_by_user_id(log.user_id).staff_name %></td>
-          <td>
-            <% if log.devid.to_s ==  devices[:login][:id].to_s %>
-              <%= log.bsevtdt %>
-            <% end %>
-          </td>
-          <td>
-            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <%= log.bsevtdt %>
-            <% end %>
-          </td>
-          <td>
-            <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
-            <% end %>
-          </td>
-          <td><%= log.devid %></td>
-          <td><%= log.devnm %></td>
-        </tr>
-        <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-          <% total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
-        <% end %>
-        <% n += 1 %>
-      <% end %>
-        <% if staff_logs.any? %>
-          <tr>
-            <td>Total Hours for</td>
-            <td><%= Uguser.find_by_user_id(staff_logs.first.user_id).staff_name %></td>
-            <td></td>
-            <td></td>
+<h1 class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl">Add Employee to Report</h1>
+<div class="">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <th scope="col" class="px-6 py-3">Date</th>
+      <th scope="col" class="px-6 py-3">Name</th>
+      <th scope="col" class="px-6 py-3">Log In Time</th>
+      <th scope="col" class="px-6 py-3">Log Out Time</th>
+      <th scope="col" class="px-6 py-3">Time in Office (Minutes)</th>
+      <th scope="col" class="px-6 py-3">Device</th>
+      <th scope="col" class="px-6 py-3">DeviceName</th>
+    </thead>
+    <tbody>
+      <% total_employee_hours = 0 %>
+      <% @punchlog.each do |staff_logs| %>
+        <% n = 0 %>
+        <% total_hours = 0 %>
+        <% staff_logs.each do |log| %>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <td><%= log.bsevtdt.strftime("%A") %></td>
+            <td><%= Uguser.find_by_user_id(log.user_id).staff_name %></td>
             <td>
-              <%= total_hours.to_i %>:<%= ((total_hours * 60) % 60).to_i %>
-              <% total_employee_hours += total_hours %>
-            </td>
-            <td>
-              <%= form_with url: "/update/staff", method: :post do |form| %>
-                <%= form.hidden_field :user_id, value: staff_logs.first.user_id %>
-                <%= form.text_field :staff_name, placeholder: 'Enter Staff Name' %>
-                <%= form.submit "Add Employee" %>
+              <% if log.devid.to_s ==  devices[:login][:id].to_s %>
+                <%= log.bsevtdt %>
               <% end %>
             </td>
+            <td>
+              <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+                <%= log.bsevtdt %>
+              <% end %>
+            </td>
+            <td>
+              <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+                <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
+              <% end %>
+            </td>
+            <td><%= log.devid %></td>
+            <td><%= log.devnm %></td>
           </tr>
+          <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
+            <% total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60 %>
+          <% end %>
+          <% n += 1 %>
         <% end %>
-    <% end %>
-    <tr>
-      <td>Total Hours All Employees</td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td>
-        <%= total_employee_hours.to_i %>:<%= ((total_employee_hours * 60) % 60).to_i %>
-      </td>
-    </tr>
-  </tbody>
-</table>
+          <% if staff_logs.any? %>
+            <tr class="font-semibold text-gray-900">
+              <td>Total Hours for</td>
+              <td><%= Uguser.find_by_user_id(staff_logs.first.user_id).staff_name %></td>
+              <td></td>
+              <td></td>
+              <td>
+                <%= total_hours.to_i %>:<%= ((total_hours * 60) % 60).to_i %>
+                <% total_employee_hours += total_hours %>
+              </td>
+              <td>
+                <%= form_with url: "/update/staff", method: :post do |form| %>
+                  <%= form.hidden_field :user_id, value: staff_logs.first.user_id %>
+                  <div class="grid md:grid-cols-2 md:gap-6">
+                    <div class="relative z-0 w-full mb-6 grou">
+                      <%= form.text_field :staff_name, placeholder: 'Enter Staff Name', class: 'text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5' %>
+                    </div>
+                    <div class="relative z-0 w-full mb-6 grou">
+                      <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><%= form.submit "Add Employee" %></button>
+                    </div>
+                  </div>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+      <% end %>
+      <tr>
+        <td>Total Hours All Employees</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <%= total_employee_hours.to_i %>:<%= ((total_employee_hours * 60) % 60).to_i %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
