@@ -11,7 +11,7 @@ default: &default
   # pool: 5
   # timeout: 5000
   adapter: mysql2
-  host:
+  host: 172.18.1.37
   username: leo
   password: l3onard0
   pool: 5
