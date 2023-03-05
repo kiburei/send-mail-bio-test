@@ -34,7 +34,9 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
           log.bsevtdt.to_s
         end,
         if log.devid.to_s ==  devices[:logout][:id].to_s
-          Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M")
+          if (n - 1) >= 0
+            Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M")
+          end
         end,
         log.devid,
         log.devnm
