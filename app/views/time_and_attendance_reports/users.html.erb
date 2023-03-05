@@ -24,7 +24,7 @@ devices = {
   <tbody>
     <% total_employee_hours = 0 %>
     <% @punchlog.each do |staff_logs| %>
-      <% n = 1 %>
+      <% n = 0 %>
       <% total_hours = 0 %>
       <% staff_logs.each do |log| %>
         <tr>
@@ -42,7 +42,9 @@ devices = {
           </td>
           <td>
             <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
+              <% if (n - 1) < 0 %>
+                <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
+              <% end %>
             <% end %>
           </td>
           <td><%= log.devid %></td>
