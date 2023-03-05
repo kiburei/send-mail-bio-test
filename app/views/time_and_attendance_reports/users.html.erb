@@ -42,7 +42,7 @@ devices = {
           </td>
           <td>
             <% if log.devid.to_s ==  devices[:logout][:id].to_s %>
-              <% if (n - 1) < 0 %>
+              <% if (n - 1) >= 0 %>
                 <%= Time.at(log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt).utc.strftime("%H:%M") %>
               <% end %>
             <% end %>

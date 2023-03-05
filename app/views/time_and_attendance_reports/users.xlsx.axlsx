@@ -40,7 +40,7 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
         log.devnm
       ]
       if log.devid.to_s ==  devices[:logout][:id].to_s
-        if (n - 1) < 0
+        if (n - 1) >= 0
           total_hours += ((log.bsevtdt - staff_logs.limit(1).offset(n - 1).first.bsevtdt) / 60) / 60
         end
       end
