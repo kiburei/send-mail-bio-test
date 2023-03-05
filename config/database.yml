@@ -6,8 +6,10 @@
 #
 default: &default
   adapter: mysql2
-  username: root
-  password: andrew_2019
+  host: 172.18.1.37
+  port: 3312
+  username: leo
+  password: l3onard0
   pool: 5
   timeout: 5000
 
