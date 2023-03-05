@@ -21,7 +21,7 @@ wb.add_worksheet(name: "Weekly Report") do |sheet|
 
   total_employee_hours = 0
   @punchlog.each do |staff_logs|
-    n = 0
+    n = 1
     total_hours = 0
     staff_logs.each do |log|
       sheet.add_row [
