@@ -16,7 +16,7 @@ class TimeAndAttendanceReportsController < ApplicationController
 
   def users
     current_month = Date.today.month
-    current_day = Date.today - 1.week
+    current_day = Date.today - 1.weeks
     @current_work_week = current_day.beginning_of_week..(current_day.end_of_week)
     staff_list = Uguser.where.not(staff_name: nil)
     @punchlog = []
@@ -33,7 +33,7 @@ class TimeAndAttendanceReportsController < ApplicationController
 
   def add_user_to_report
     current_month = Date.today.month
-    current_day = Date.today - 1.week
+    current_day = Date.today - 1.weeks
     @current_work_week = current_day.beginning_of_week..(current_day.end_of_week)
     staff_list = Uguser.where(staff_name: nil)
     @punchlog = []
